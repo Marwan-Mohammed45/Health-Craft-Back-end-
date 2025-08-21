@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 const patientSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true, lowercase: true },
+  email: { type: String, required: true, unique: true, lowercase: true, index: true },
   password: { type: String, required: true },
   phone: { type: String },
   age: { type: Number },
   gender: { type: String },
   address: { type: String },
-  profileImage: { type: String, default: "" }, // تخزين رابط أو مسار الصورة
+  profileImage: { type: String, default: "" },
   isVerified: { type: Boolean, default: false },
   otpCode: { type: String },              
   otpExpire: { type: Date },             

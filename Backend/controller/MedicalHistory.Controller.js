@@ -1,7 +1,7 @@
 import MedicalHistory from "../models/medicalHistory.js";
 import path from "path";
 
-const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
+const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 const medicalController = {
   addRecord: async (req, res) => {
