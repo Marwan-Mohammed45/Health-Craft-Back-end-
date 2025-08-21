@@ -5,7 +5,7 @@ import multer from "multer";
 import path from "path";
 import Doctor from "../models/doctor.model.js";
 import { generateOTP } from "../utils/generateOTP.js";
-import { sendEmail } from "../utils/sendemail.js";
+import { sendEmail } from "../utils/sendEmail.js"; 
 
 const JWT_SECRET = process.env.JWT_SECRET || "secretkey";
 const JWT_EXPIRES = process.env.JWT_EXPIRES || "1d";
