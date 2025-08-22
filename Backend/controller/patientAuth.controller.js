@@ -3,6 +3,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Patient from "../models/Patient.model.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import multer from "multer";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secretkey";
 const JWT_EXPIRES = process.env.JWT_EXPIRES || "1d";
@@ -11,7 +14,23 @@ const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "10");
 const createToken = (payload) =>
   jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
 
-/* -------------------- Patient Signup -------------------- */
+// -------------------- Cloudinary Config --------------------
+cloudinary.config({
+  cloudinary_url: process.env.CLOUDINARY_URL,
+});
+
+const cloudStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "patients",
+    allowed_formats: ["jpg", "jpeg", "png"],
+    transformation: [{ width: 500, crop: "limit" }],
+  },
+});
+
+export const uploadPatient = multer({ storage: cloudStorage });
+
+// -------------------- Patient Signup --------------------
 export const patientSignup = asyncHandler(async (req, res) => {
   const { name, email, password, phone, age, gender, address } = req.body;
 
@@ -42,7 +61,7 @@ export const patientSignup = asyncHandler(async (req, res) => {
     age,
     gender,
     address,
-    profileImage: req.file ? `/uploads/patients/${req.file.filename}` : null,
+    profileImage: req.file ? req.file.path : null,
     verificationToken: otp,
     verificationTokenExpire: otpExpire,
   });
@@ -65,7 +84,7 @@ export const patientSignup = asyncHandler(async (req, res) => {
   });
 });
 
-/* -------------------- Verify Email with OTP -------------------- */
+// -------------------- Verify Email with OTP --------------------
 export const patientVerifyEmail = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;
 
@@ -95,7 +114,7 @@ export const patientVerifyEmail = asyncHandler(async (req, res) => {
   res.json({ success: true, message: "Email verified successfully." });
 });
 
-/* -------------------- Signin -------------------- */
+// -------------------- Signin --------------------
 export const patientSignin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -135,11 +154,12 @@ export const patientSignin = asyncHandler(async (req, res) => {
       name: patient.name,
       email: patient.email,
       role: "patient",
+      profileImage: patient.profileImage,
     },
   });
 });
 
-/* -------------------- Forgot Password (OTP) -------------------- */
+// -------------------- Forgot Password (OTP) --------------------
 export const patientForgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
@@ -175,7 +195,7 @@ export const patientForgotPassword = asyncHandler(async (req, res) => {
   });
 });
 
-/* -------------------- Reset Password (with OTP) -------------------- */
+// -------------------- Reset Password (with OTP) --------------------
 export const patientResetPassword = asyncHandler(async (req, res) => {
   const { email, otp, password, confirmPassword } = req.body;
 

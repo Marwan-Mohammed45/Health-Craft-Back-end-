@@ -12,7 +12,6 @@ import {
 
 const router = express.Router();
 
-// تسجيل مريض جديد + رفع صورة بروفايل اختياري
 router.post("/patient/signup", uploadPatient.single("profileImage"), patientSignup);
 
 router.post("/patient/verify-otp", patientVerifyEmail);

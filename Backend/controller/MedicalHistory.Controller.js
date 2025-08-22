@@ -1,8 +1,27 @@
 import MedicalHistory from "../models/medicalHistory.js";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import multer from "multer";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
+// -------------------- Cloudinary Config --------------------
+cloudinary.config({
+  cloudinary_url: process.env.CLOUDINARY_URL,
+});
+
+const cloudStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "prescriptions",
+    allowed_formats: ["jpg", "jpeg", "png", "pdf"],
+    transformation: [{ width: 800, crop: "limit" }],
+  },
+});
+
+export const uploadPrescription = multer({ storage: cloudStorage });
+
+// -------------------- Medical Controller --------------------
 const medicalController = {
   addRecord: async (req, res) => {
     try {
@@ -37,7 +56,8 @@ const medicalController = {
         if (patientHistory) history.patientHistory = patientHistory;
       }
 
-      const prescriptionPath = req.file ? `${BASE_URL}/uploads/prescriptions/${req.file.filename}` : null;
+      // Prescription URL from Cloudinary
+      const prescriptionPath = req.file ? req.file.path : null;
 
       history.records.push({ title, description, prescription: prescriptionPath, notes });
       await history.save();
