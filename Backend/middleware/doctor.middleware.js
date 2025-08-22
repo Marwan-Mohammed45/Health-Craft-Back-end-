@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import Doctor from "../models/doctor.model.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error("JWT_SECRET is not defined");
 
 export const protectDoctor = async (req, res, next) => {
   try {
@@ -27,10 +28,7 @@ export const protectDoctor = async (req, res, next) => {
     } catch (err) {
       return res.status(401).json({
         success: false,
-        code:
-          err.name === "TokenExpiredError"
-            ? "TOKEN_EXPIRED"
-            : "INVALID_TOKEN",
+        code: err.name === "TokenExpiredError" ? "TOKEN_EXPIRED" : "INVALID_TOKEN",
         message:
           err.name === "TokenExpiredError"
             ? "Unauthorized: Token has expired."
@@ -38,9 +36,9 @@ export const protectDoctor = async (req, res, next) => {
       });
     }
 
-    const doctor = await Doctor.findById(decoded.id).select(
-      "-password -otp -otpExpires -resetPasswordToken -resetPasswordExpire"
-    );
+    const doctor = await Doctor.findById(decoded.id)
+      .select("-password -otpCode -otpExpire -resetPasswordToken -resetPasswordExpire")
+      .lean();
 
     if (!doctor) {
       return res.status(404).json({
