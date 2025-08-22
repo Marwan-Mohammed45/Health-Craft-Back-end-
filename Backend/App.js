@@ -19,9 +19,9 @@ app.get("/favicon.ico", (req, res) => res.status(204).end());
 app.get("/", (req, res) => {
   res.send("✅ Server is running");
 });
-app.use("/auth/patient", patientAuthroutes);
-app.use("/auth/doctor", doctorAuthroutes);
-app.use("/medicalHistory", medicalHistory);
+app.use("/auth/api/patient", patientAuthroutes);
+app.use("/auth/api/doctor", doctorAuthroutes);
+app.use("/api/medicalHistory", medicalHistory);
 
 connectDB();
 
