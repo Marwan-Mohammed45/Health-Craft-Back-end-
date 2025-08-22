@@ -2,11 +2,11 @@
   "name": "healthcraft",
   "version": "1.0.0",
   "description": "",
-  "main": "backend/app.js",
+  "main": "backend/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon backend/app.js",
-    "start": "node backend/app.js",
+    "dev": "nodemon backend/index.js",
+    "start": "node backend/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
