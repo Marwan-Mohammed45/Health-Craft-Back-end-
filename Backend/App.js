@@ -16,6 +16,8 @@ app.use(cors());
 
 app.use("/uploads", express.static("uploads"));
 
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+
 app.get("/", (req, res) => {
   res.send("✅ Server is running");
 });
