@@ -7,13 +7,11 @@ import cors from "cors";
 import medicalHistory from "./routes/MedicalHistory.Routes.js";
 
 dotenv.config();
-
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
-
 app.use("/uploads", express.static("uploads"));
 
 app.get("/favicon.ico", (req, res) => res.status(204).end());
@@ -21,8 +19,8 @@ app.get("/favicon.ico", (req, res) => res.status(204).end());
 app.get("/", (req, res) => {
   res.send("✅ Server is running");
 });
-app.use("/auth", patientAuthroutes);
-app.use("/auth", doctorAuthroutes);
+app.use("/auth/patient", patientAuthroutes);
+app.use("/auth/doctor", doctorAuthroutes);
 app.use("/medicalHistory", medicalHistory);
 
 connectDB();
