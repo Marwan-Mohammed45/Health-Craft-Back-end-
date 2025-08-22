@@ -21,7 +21,7 @@ router.post("/doctor/signin", doctorSignin);
 
 router.post("/doctor/forgot-password", doctorForgotPassword);
 
-router.post("/doctor/reset-password/:token", doctorResetPassword);
+router.post("/doctor/reset-password", doctorResetPassword);
 
 router.post("/doctor/resend-otp", doctorResendOtp);
 
