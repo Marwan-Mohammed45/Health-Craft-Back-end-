@@ -14,11 +14,12 @@ app.use(express.json());
 app.use(cors());
 app.use("/uploads", express.static("uploads"));
 
-app.get("/favicon.ico", (req, res) => res.status(204).end());
-
-app.get("/", (req, res) => {
-  res.send("✅ Server is running");
+app.get('/', (req, res) => {
+  res.send('Backend is running');
 });
+
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 app.use("/auth/api/patient", patientAuthroutes);
 app.use("/auth/api/doctor", doctorAuthroutes);
 app.use("/api/medicalHistory", medicalHistory);
