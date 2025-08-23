@@ -56,7 +56,7 @@ export const doctorSignup = asyncHandler(async (req, res) => {
     specialization,
     experience,
     clinicAddress,
-    profileImage: req.file?.path || null, // Cloudinary URL
+    profileImage: req.file?.path || null, 
     otpCode: otp,
     otpExpire,
     isVerified: false,
