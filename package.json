@@ -5,9 +5,9 @@
   "main": "backend/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon backend/index.js",
+    "dev": "nodemon backend/server.js",
     "start": "node backend/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo \"No build step required\""
   },
   "keywords": [],
   "author": "",
@@ -24,7 +24,9 @@
     "mongoose": "^8.17.1",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
-    "nodemailer": "^7.0.5",
+    "nodemailer": "^7.0.5"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.10"
   }
 }
