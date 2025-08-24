@@ -7,19 +7,15 @@ import doctorAuthroutes from "./routes/doctor.auth.routes.js";
 import medicalHistory from "./routes/MedicalHistory.Routes.js";
 
 dotenv.config();
-
 const app = express();
-
 
 app.use(express.json());
 app.use(cors());
 app.use("/uploads", express.static("uploads"));
 
-
 app.get("/", (req, res) => {
   res.send("Backend is running");
 });
-
 
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 
@@ -32,12 +28,5 @@ connectDB();
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
-
-if (process.env.NODE_ENV !== "production") {
-  const port = process.env.PORT || 3000;
-  app.listen(port, () => {
-    console.log(`✅ Server running on http://localhost:${port}`);
-  });
-}
 
 export default app;
