@@ -5,8 +5,8 @@
   "main": "App.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon backend/app.js",
-    "start": "node backend/app.js",
+    "dev": "nodemon backend/App.js",
+    "start": "node backend/App.js",
     "build": "echo \"No build step required\""
   },
   "keywords": [],
