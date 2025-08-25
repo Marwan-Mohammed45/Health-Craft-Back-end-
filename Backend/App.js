@@ -1,9 +1,9 @@
 process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err);
+  console.error("❌ Uncaught Exception:", err);
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+  console.error("❌ Unhandled Rejection at:", promise, "reason:", reason);
 });
 
 import express from "express";
@@ -22,10 +22,8 @@ app.use(cors());
 app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
-  res.send("Backend is running");
+  res.send("Backend is running 🚀");
 });
-
-app.get("/favicon.ico", (req, res) => res.status(204).end());
 
 app.use("/auth/api/patient", patientAuthroutes);
 app.use("/auth/api/doctor", doctorAuthroutes);
