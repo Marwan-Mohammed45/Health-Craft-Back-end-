@@ -1,3 +1,11 @@
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+});
+
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -29,4 +37,7 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-export default app;
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`✅ Server running on http://localhost:${port}`);
+});
