@@ -1,7 +1,6 @@
 import express from "express";
-import { uploadDoctor } from "../middleware/ubloads.js";  
+import { uploadDoctor } from "../middleware/ubloads.js";
 import { protectDoctor } from "../middleware/doctor.middleware.js";
-
 import {
   doctorSignup,
   doctorVerifyOtp,
@@ -13,19 +12,13 @@ import {
 
 const router = express.Router();
 
-router.post("/doctor/signup", uploadDoctor.single("profileImage"), doctorSignup);
-
-router.post("/doctor/verify-otp", doctorVerifyOtp);
-
-router.post("/doctor/signin", doctorSignin);
-
-router.post("/doctor/forgot-password", doctorForgotPassword);
-
-router.post("/doctor/reset-password", doctorResetPassword);
-
-router.post("/doctor/resend-otp", doctorResendOtp);
-
-router.get("/doctor/profile", protectDoctor, (req, res) => {
+router.post("/signup", uploadDoctor.single("profileImage"), doctorSignup);
+router.post("/verify-otp", doctorVerifyOtp);
+router.post("/signin", doctorSignin);
+router.post("/forgot-password", doctorForgotPassword);
+router.post("/reset-password", doctorResetPassword);
+router.post("/resend-otp", doctorResendOtp);
+router.get("/profile", protectDoctor, (req, res) => {
   res.json({ success: true, doctor: req.doctor });
 });
 

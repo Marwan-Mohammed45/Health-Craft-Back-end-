@@ -1,7 +1,6 @@
 import express from "express";
-import { uploadPatient } from "../middleware/ubloads.js";   
+import { uploadPatient } from "../middleware/ubloads.js";
 import { protectPatient } from "../middleware/patient.Auth.middelware.js";
-
 import {
   patientSignup,
   patientVerifyEmail,
@@ -12,17 +11,12 @@ import {
 
 const router = express.Router();
 
-router.post("/patient/signup", uploadPatient.single("profileImage"), patientSignup);
-
-router.post("/patient/verify-otp", patientVerifyEmail);
-
-router.post("/patient/signin", patientSignin);
-
-router.post("/patient/forgot-password", patientForgotPassword);
-
-router.post("/patient/reset-password", patientResetPassword);
-
-router.get("/patient/profile", protectPatient, (req, res) => {
+router.post("/signup", uploadPatient.single("profileImage"), patientSignup);
+router.post("/verify-otp", patientVerifyEmail);
+router.post("/signin", patientSignin);
+router.post("/forgot-password", patientForgotPassword);
+router.post("/reset-password", patientResetPassword);
+router.get("/profile", protectPatient, (req, res) => {
   res.json({ success: true, patient: req.patient });
 });
 
