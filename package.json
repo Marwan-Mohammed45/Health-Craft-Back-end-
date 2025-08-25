@@ -2,7 +2,7 @@
   "name": "healthcraft",
   "version": "1.0.0",
   "description": "",
-  "main": "backend/app.js",
+  "main": "App.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon backend/app.js",
