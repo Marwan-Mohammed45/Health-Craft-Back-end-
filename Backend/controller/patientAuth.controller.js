@@ -14,7 +14,6 @@ const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "10");
 const createToken = (payload) =>
   jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
 
-// -------------------- Cloudinary Config --------------------
 cloudinary.config({
   cloudinary_url: process.env.CLOUDINARY_URL,
 });

@@ -3,9 +3,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
 
-const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
-// -------------------- Cloudinary Config --------------------
 cloudinary.config({
   cloudinary_url: process.env.CLOUDINARY_URL,
 });
@@ -21,7 +19,6 @@ const cloudStorage = new CloudinaryStorage({
 
 export const uploadPrescription = multer({ storage: cloudStorage });
 
-// -------------------- Medical Controller --------------------
 const medicalController = {
   addRecord: async (req, res) => {
     try {
@@ -29,7 +26,6 @@ const medicalController = {
       let familyHistory = req.body.familyHistory;
       let patientHistory = req.body.patientHistory;
 
-      // Parse JSON if it's a string
       try {
         if (typeof familyHistory === "string") familyHistory = JSON.parse(familyHistory);
         if (typeof patientHistory === "string") patientHistory = JSON.parse(patientHistory);
@@ -56,7 +52,6 @@ const medicalController = {
         if (patientHistory) history.patientHistory = patientHistory;
       }
 
-      // Prescription URL from Cloudinary
       const prescriptionPath = req.file ? req.file.path : null;
 
       history.records.push({ title, description, prescription: prescriptionPath, notes });

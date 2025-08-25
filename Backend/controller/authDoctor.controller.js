@@ -12,7 +12,6 @@ const JWT_SECRET = process.env.JWT_SECRET || "secretkey";
 const JWT_EXPIRES = process.env.JWT_EXPIRES || "1d";
 const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "10");
 
-// -------------------- Cloudinary Config --------------------
 cloudinary.config({
   cloudinary_url: process.env.CLOUDINARY_URL,
 });
@@ -28,11 +27,9 @@ const cloudStorage = new CloudinaryStorage({
 
 export const upload = multer({ storage: cloudStorage });
 
-// -------------------- JWT --------------------
 const createToken = (payload) =>
   jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
 
-// -------------------- Doctor Signup --------------------
 export const doctorSignup = asyncHandler(async (req, res) => {
   const { name, email, password, phone, specialization, experience, clinicAddress } = req.body;
 
@@ -73,7 +70,6 @@ export const doctorSignup = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, message: "Doctor registered. Please check your email for OTP." });
 });
 
-// -------------------- Verify Email with OTP --------------------
 export const doctorVerifyOtp = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;
 
@@ -88,7 +84,6 @@ export const doctorVerifyOtp = asyncHandler(async (req, res) => {
   res.json({ success: true, message: "Email verified successfully." });
 });
 
-// -------------------- Signin --------------------
 export const doctorSignin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -121,7 +116,6 @@ export const doctorSignin = asyncHandler(async (req, res) => {
   });
 });
 
-// -------------------- Forgot Password (OTP) --------------------
 export const doctorForgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ success: false, message: "Email required." });
@@ -143,7 +137,6 @@ export const doctorForgotPassword = asyncHandler(async (req, res) => {
   res.json({ success: true, message: "OTP sent to your email if account exists." });
 });
 
-// -------------------- Reset Password (with OTP) --------------------
 export const doctorResetPassword = asyncHandler(async (req, res) => {
   const { email, otp, password, confirmPassword } = req.body;
 
@@ -168,7 +161,6 @@ export const doctorResetPassword = asyncHandler(async (req, res) => {
   res.json({ success: true, message: "Password reset successfully." });
 });
 
-// -------------------- Resend OTP --------------------
 export const doctorResendOtp = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const doctor = await Doctor.findOne({ email });
