@@ -1,35 +1,16 @@
 import MedicalHistory from "../models/medicalHistory.js";
-import { v2 as cloudinary } from "cloudinary";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
-import multer from "multer";
-
-
-cloudinary.config({
-  cloudinary_url: process.env.CLOUDINARY_URL,
-});
-
-const cloudStorage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "prescriptions",
-    allowed_formats: ["jpg", "jpeg", "png", "pdf"],
-    transformation: [{ width: 800, crop: "limit" }],
-  },
-});
-
-export const uploadPrescription = multer({ storage: cloudStorage });
 
 const medicalController = {
   addRecord: async (req, res) => {
     try {
       const { title, description, notes } = req.body;
-      let familyHistory = req.body.familyHistory;
-      let patientHistory = req.body.patientHistory;
+      let { familyHistory, patientHistory } = req.body;
 
+      // allow stringified JSON
       try {
         if (typeof familyHistory === "string") familyHistory = JSON.parse(familyHistory);
         if (typeof patientHistory === "string") patientHistory = JSON.parse(patientHistory);
-      } catch (err) {
+      } catch {
         return res.status(400).json({ success: false, message: "Invalid JSON format" });
       }
 
@@ -40,13 +21,7 @@ const medicalController = {
 
       let history = await MedicalHistory.findOne({ patientId });
       if (!history) {
-        history = new MedicalHistory({
-          patientId,
-          patientName,
-          familyHistory,
-          patientHistory,
-          records: [],
-        });
+        history = new MedicalHistory({ patientId, patientName, familyHistory, patientHistory, records: [] });
       } else {
         if (familyHistory) history.familyHistory = familyHistory;
         if (patientHistory) history.patientHistory = patientHistory;
@@ -57,28 +32,25 @@ const medicalController = {
       history.records.push({ title, description, prescription: prescriptionPath, notes });
       await history.save();
 
-      const newRecord = history.records[history.records.length - 1];
+      const record = history.records.at(-1);
       res.status(201).json({
         success: true,
         message: "Medical record added successfully",
-        patient: {
-          id: patientId,
-          name: patientName,
-        },
-        record: newRecord,
+        patient: { id: patientId, name: patientName },
+        record,
       });
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("AddRecord error:", err);
       res.status(500).json({ success: false, message: "Server error" });
     }
   },
 
   updateRecord: async (req, res) => {
     try {
-      const patientId = req.patient._id;
       const { id } = req.params;
-      const history = await MedicalHistory.findOne({ patientId });
+      const patientId = req.patient._id;
 
+      const history = await MedicalHistory.findOne({ patientId });
       if (!history) return res.status(404).json({ success: false, message: "No medical history found" });
 
       const record = history.records.id(id);
@@ -88,8 +60,8 @@ const medicalController = {
       await history.save();
 
       res.json({ success: true, message: "Record updated successfully", record });
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("UpdateRecord error:", err);
       res.status(500).json({ success: false, message: "Server error" });
     }
   },
@@ -111,8 +83,8 @@ const medicalController = {
         },
         records: history.records,
       });
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("GetHistory error:", err);
       res.status(500).json({ success: false, message: "Server error" });
     }
   },
