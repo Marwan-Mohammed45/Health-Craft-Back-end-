@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon api/index.js",
-    "start": "node api/index.js"
+    "dev": "nodemon backend/App.js",
+    "start": "node backend/App.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
