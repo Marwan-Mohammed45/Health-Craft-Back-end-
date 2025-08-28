@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Patient from "../models/Patient.model.js";
-import { sendEmail } from "../utils/sendEmail.js";
+import { sendEmail } from "../utils/sendemail.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secretkey";
 const JWT_EXPIRES = process.env.JWT_EXPIRES || "1d";

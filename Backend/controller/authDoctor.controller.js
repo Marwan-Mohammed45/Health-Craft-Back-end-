@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Doctor from "../models/doctor.model.js";
 import { generateOTP } from "../utils/generateOTP.js";
-import { sendEmail } from "../utils/sendEmail.js";
+import { sendEmail } from "../utils/sendemail.js";
 
 const secret = process.env.JWT_SECRET;
 const tokenLife = process.env.JWT_EXPIRES || "1d";
