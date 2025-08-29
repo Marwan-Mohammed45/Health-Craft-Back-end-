@@ -8,7 +8,7 @@ import { sendEmail } from "../utils/sendemail.js";
 const secret = process.env.JWT_SECRET;
 const tokenLife = process.env.JWT_EXPIRES || "1d";
 
-const signToken = id => jwt.sign({ id }, secret, { expiresIn: tokenLife });
+const signToken = (id) => jwt.sign({ id }, secret, { expiresIn: tokenLife });
 
 export const doctorSignup = asyncHandler(async (req, res) => {
   const { name, email, password, phone, specialization, experience, clinicAddress } = req.body;
@@ -23,9 +23,15 @@ export const doctorSignup = asyncHandler(async (req, res) => {
   const otp = generateOTP(6);
 
   const doctor = await Doctor.create({
-    name, email, password: hashed, phone, specialization, experience, clinicAddress,
-    profileImage: req.file?.path || null,
-    otpCode: otp, otpExpire: Date.now() + 10 * 60000
+    name,
+    email,
+    password: hashed,
+    phone,
+    specialization,
+    experience,
+    clinicAddress,
+    otpCode: otp,
+    otpExpire: Date.now() + 10 * 60000
   });
 
   await sendEmail(email, "Verify Account", `Your OTP: ${otp}`);

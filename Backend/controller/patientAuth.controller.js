@@ -37,7 +37,6 @@ export const patientSignup = asyncHandler(async (req, res) => {
     age,
     gender,
     address,
-    profileImage: req.file ? req.file.path : null,
     verificationToken: otp,
     verificationTokenExpire: otpExpire,
   });
@@ -107,7 +106,6 @@ export const patientSignin = asyncHandler(async (req, res) => {
       name: patient.name,
       email: patient.email,
       role: "patient",
-      profileImage: patient.profileImage,
     },
   });
 });

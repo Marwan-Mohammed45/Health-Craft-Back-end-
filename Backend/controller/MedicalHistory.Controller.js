@@ -27,9 +27,8 @@ const medicalController = {
         if (patientHistory) history.patientHistory = patientHistory;
       }
 
-      const prescriptionPath = req.file ? req.file.path : null;
-
-      history.records.push({ title, description, prescription: prescriptionPath, notes });
+      // حذف أي استخدام للروشتة
+      history.records.push({ title, description, notes });
       await history.save();
 
       const record = history.records.at(-1);
@@ -56,6 +55,7 @@ const medicalController = {
       const record = history.records.id(id);
       if (!record) return res.status(404).json({ success: false, message: "Record not found" });
 
+      // التحديث مش هيشمل prescription أصلاً لأنه اتشال من الـ Schema
       record.set(req.body);
       await history.save();
 
