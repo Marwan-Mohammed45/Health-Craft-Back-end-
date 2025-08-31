@@ -2,7 +2,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { connectDB } from "./config/connectdb.js"; 
+import { connectDB } from "./DB/connectdb.js"; 
 import patientAuthRoutes from "./routes/patient.auth.routes.js";
 import doctorAuthRoutes from "./routes/doctor.auth.routes.js";
 import medicalHistoryRoutes from "./routes/MedicalHistory.Routes.js";
