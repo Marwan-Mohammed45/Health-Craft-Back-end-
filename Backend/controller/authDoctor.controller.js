@@ -10,17 +10,14 @@ const tokenLife = process.env.JWT_EXPIRES || "1d";
 
 const signToken = (id) => jwt.sign({ id }, secret, { expiresIn: tokenLife });
 
-// 🟢 Doctor Signup
 export const doctorSignup = asyncHandler(async (req, res) => {
   const { name, email, password, phone, specialization, experience, clinicAddress } = req.body;
 
-  if (!name || !email || !password || !specialization) {
+  if (!name || !email || !password || !specialization)
     return res.status(400).json({ success: false, message: "Missing required fields" });
-  }
 
-  if (await Doctor.findOne({ email })) {
+  if (await Doctor.findOne({ email }))
     return res.status(409).json({ success: false, message: "Email already registered" });
-  }
 
   const hashed = await bcrypt.hash(password, 10);
   const otp = generateOTP(6);
@@ -33,7 +30,6 @@ export const doctorSignup = asyncHandler(async (req, res) => {
     specialization,
     experience,
     clinicAddress,
-    profileImage: req.file ? req.file.path : null, // لو في صورة
     otpCode: otp,
     otpExpire: Date.now() + 10 * 60000
   });
@@ -43,7 +39,6 @@ export const doctorSignup = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, message: "Doctor created, verify email" });
 });
 
-// 🟢 Verify OTP
 export const doctorVerifyOtp = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;
   const doctor = await Doctor.findOne({ email, otpCode: otp, otpExpire: { $gt: Date.now() } });
@@ -57,7 +52,6 @@ export const doctorVerifyOtp = asyncHandler(async (req, res) => {
   res.json({ success: true, message: "Email verified" });
 });
 
-// 🟢 Signin
 export const doctorSignin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const doctor = await Doctor.findOne({ email });
@@ -70,7 +64,6 @@ export const doctorSignin = asyncHandler(async (req, res) => {
   res.json({ success: true, token: signToken(doctor._id), user: doctor });
 });
 
-// 🟢 Forgot Password
 export const doctorForgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const doctor = await Doctor.findOne({ email });
@@ -85,7 +78,6 @@ export const doctorForgotPassword = asyncHandler(async (req, res) => {
   res.json({ success: true, message: "OTP sent" });
 });
 
-// 🟢 Reset Password
 export const doctorResetPassword = asyncHandler(async (req, res) => {
   const { email, otp, password, confirmPassword } = req.body;
   if (password !== confirmPassword)
@@ -101,7 +93,6 @@ export const doctorResetPassword = asyncHandler(async (req, res) => {
   res.json({ success: true, message: "Password reset" });
 });
 
-// 🟢 Resend OTP
 export const doctorResendOtp = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const doctor = await Doctor.findOne({ email });

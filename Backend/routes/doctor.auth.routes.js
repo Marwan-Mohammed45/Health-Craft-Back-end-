@@ -1,5 +1,4 @@
 import express from "express";
-import upload from "../middleware/uploads.js";
 import { protectDoctor } from "../middleware/doctor.middleware.js";
 import {
   doctorSignup, doctorVerifyOtp, doctorSignin,
@@ -8,7 +7,7 @@ import {
 
 const router = express.Router();
 
-router.post("/signup", upload.single("profileImage"), doctorSignup);
+router.post("/signup", doctorSignup);
 router.post("/verify-otp", doctorVerifyOtp);
 router.post("/signin", doctorSignin);
 router.post("/forgot-password", doctorForgotPassword);

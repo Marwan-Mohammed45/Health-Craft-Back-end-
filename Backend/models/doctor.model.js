@@ -9,7 +9,6 @@ const doctorSchema = new mongoose.Schema({
   specialization: { type: String, required: true },
   experience: { type: Number, default: 0 },
   clinicAddress: String,
-  profileImage: String, 
   otpCode: String,
   otpExpire: Date,
   resetPasswordToken: String,
