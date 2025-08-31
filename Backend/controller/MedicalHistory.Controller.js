@@ -6,7 +6,7 @@ const medicalController = {
       const { title, description, notes } = req.body;
       let { familyHistory, patientHistory } = req.body;
 
-      // allow stringified JSON
+      // parse JSON لو مبعوت كنص
       try {
         if (typeof familyHistory === "string") familyHistory = JSON.parse(familyHistory);
         if (typeof patientHistory === "string") patientHistory = JSON.parse(patientHistory);
@@ -27,8 +27,10 @@ const medicalController = {
         if (patientHistory) history.patientHistory = patientHistory;
       }
 
-      // حذف أي استخدام للروشتة
-      history.records.push({ title, description, notes });
+      // لو في ملفات مرفوعة
+      const files = req.files?.map((file) => file.path) || [];
+
+      history.records.push({ title, description, notes, files });
       await history.save();
 
       const record = history.records.at(-1);
@@ -55,7 +57,7 @@ const medicalController = {
       const record = history.records.id(id);
       if (!record) return res.status(404).json({ success: false, message: "Record not found" });
 
-      // التحديث مش هيشمل prescription أصلاً لأنه اتشال من الـ Schema
+      // تحديث بيانات السجل
       record.set(req.body);
       await history.save();
 
