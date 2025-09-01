@@ -9,10 +9,13 @@ const doctorSchema = new mongoose.Schema({
   specialization: { type: String, required: true },
   experience: { type: Number, default: 0 },
   clinicAddress: String,
+  profileImage: String, 
   otpCode: String,
   otpExpire: Date,
   resetPasswordToken: String,
   resetPasswordExpire: Date
 }, { timestamps: true });
 
-export default mongoose.model("Doctor", doctorSchema);
+const Doctor = mongoose.model("Doctor", doctorSchema);
+
+export default Doctor;
