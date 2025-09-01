@@ -1,4 +1,5 @@
 import express from "express";
+import { uploadPatient } from "../middleware/Multer.js";
 import { protectPatient } from "../middleware/patient.Auth.middelware.js";
 
 import {
@@ -11,7 +12,7 @@ import {
 
 const router = express.Router();
 
-router.post("/signup", patientSignup);
+router.post("/signup", uploadPatient.single("profileImage"), patientSignup);
 router.post("/verify-otp", patientVerifyEmail);
 router.post("/signin", patientSignin);
 router.post("/forgot-password", patientForgotPassword);

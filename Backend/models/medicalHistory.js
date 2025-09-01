@@ -4,7 +4,8 @@ const recordSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now },
   title: { type: String, required: true },
   description: String,
-  notes: String, 
+  notes: String,
+  prescription: { type: String, default: null }, 
 });
 
 const medicalHistorySchema = new mongoose.Schema(

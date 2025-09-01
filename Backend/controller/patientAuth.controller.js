@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Patient from "../models/Patient.model.js";
 import { sendEmail } from "../utils/sendemail.js";
+import cloudinary from "../middleware/cloudnairy.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secretkey";
 const JWT_EXPIRES = process.env.JWT_EXPIRES || "1d";
@@ -29,6 +30,16 @@ export const patientSignup = asyncHandler(async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const otpExpire = Date.now() + 10 * 60 * 1000;
 
+  // رفع الصورة لو موجودة
+  let profileImageUrl = "";
+  if (req.file) {
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      folder: "patients",
+      resource_type: "image",
+    });
+    profileImageUrl = uploadResult.secure_url;
+  }
+
   const patient = new Patient({
     name,
     email,
@@ -37,6 +48,7 @@ export const patientSignup = asyncHandler(async (req, res) => {
     age,
     gender,
     address,
+    profileImage: profileImageUrl,
     verificationToken: otp,
     verificationTokenExpire: otpExpire,
   });

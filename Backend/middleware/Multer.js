@@ -1,11 +1,33 @@
 import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../middleware/cloudnairy.js";
 
-const storage = multer.diskStorage({
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+const doctorStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "doctors",
+    allowed_formats: ["jpg", "png", "jpeg"],
+    transformation: [{ width: 500, height: 500, crop: "limit" }],
   },
 });
+export const uploadDoctor = multer({ storage: doctorStorage });
 
-const upload = multer({ storage });
+const patientStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "patients",
+    allowed_formats: ["jpg", "png", "jpeg"],
+    transformation: [{ width: 500, height: 500, crop: "limit" }],
+  },
+});
+export const uploadPatient = multer({ storage: patientStorage });
 
-export default upload;
+const prescriptionStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "prescriptions",
+    allowed_formats: ["jpg", "png", "jpeg", "pdf"],
+    transformation: [{ width: 1000, crop: "limit" }],
+  },
+});
+export const uploadPrescription = multer({ storage: prescriptionStorage });

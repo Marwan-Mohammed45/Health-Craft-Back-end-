@@ -1,4 +1,5 @@
 import MedicalHistory from "../models/medicalHistory.js";
+import cloudinary from "../middleware/cloudnairy.js";
 
 const medicalController = {
   addRecord: async (req, res) => {
@@ -6,7 +7,22 @@ const medicalController = {
       const { title, description, notes } = req.body;
       let { familyHistory, patientHistory } = req.body;
 
-      // allow stringified JSON
+      // لو فيه صورة روشتة مرفوعة، نرفعها على Cloudinary
+      let prescriptionUrl = null;
+      if (req.file) {
+        try {
+          const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+            folder: "prescriptions",
+            resource_type: "image",
+          });
+          prescriptionUrl = uploadResult.secure_url;
+        } catch (err) {
+          console.error("Cloudinary upload error:", err);
+          return res.status(500).json({ success: false, message: "Failed to upload prescription image" });
+        }
+      }
+
+      // لو فيه JSON جاي كـ String
       try {
         if (typeof familyHistory === "string") familyHistory = JSON.parse(familyHistory);
         if (typeof patientHistory === "string") patientHistory = JSON.parse(patientHistory);
@@ -27,8 +43,8 @@ const medicalController = {
         if (patientHistory) history.patientHistory = patientHistory;
       }
 
-      // حذف أي استخدام للروشتة
-      history.records.push({ title, description, notes });
+      // إضافة الروشتة لو موجودة
+      history.records.push({ title, description, notes, prescription: prescriptionUrl });
       await history.save();
 
       const record = history.records.at(-1);
@@ -48,17 +64,35 @@ const medicalController = {
     try {
       const { id } = req.params;
       const patientId = req.patient._id;
-
       const history = await MedicalHistory.findOne({ patientId });
       if (!history) return res.status(404).json({ success: false, message: "No medical history found" });
 
       const record = history.records.id(id);
       if (!record) return res.status(404).json({ success: false, message: "Record not found" });
 
-      // التحديث مش هيشمل prescription أصلاً لأنه اتشال من الـ Schema
-      record.set(req.body);
-      await history.save();
+      const { title, description, notes } = req.body;
 
+      // لو فيه صورة جديدة، نرفعها على Cloudinary
+      let prescriptionUrl = record.prescription;
+      if (req.file) {
+        try {
+          const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+            folder: "prescriptions",
+            resource_type: "image",
+          });
+          prescriptionUrl = uploadResult.secure_url;
+        } catch (err) {
+          console.error("Cloudinary upload error:", err);
+          return res.status(500).json({ success: false, message: "Failed to upload prescription image" });
+        }
+      }
+
+      if (title) record.title = title;
+      if (description) record.description = description;
+      if (notes) record.notes = notes;
+      record.prescription = prescriptionUrl;
+
+      await history.save();
       res.json({ success: true, message: "Record updated successfully", record });
     } catch (err) {
       console.error("UpdateRecord error:", err);
@@ -70,7 +104,6 @@ const medicalController = {
     try {
       const patientId = req.patient._id;
       const history = await MedicalHistory.findOne({ patientId });
-
       if (!history) return res.status(404).json({ success: false, message: "No medical history found" });
 
       res.json({
